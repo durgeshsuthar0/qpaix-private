@@ -684,7 +684,8 @@ const PayslipTemplate = ({ data }) => {
                 }}
               >
                 {(data.leaveData?.cl?.opening || 0) -
-                  (data.leaveData?.cl?.taken || 0)}
+                  (data.leaveData?.cl?.taken || 0) +
+                  1}
               </td>
               <td
                 style={{
@@ -694,7 +695,8 @@ const PayslipTemplate = ({ data }) => {
                 }}
               >
                 {(data.leaveData?.pl?.opening || 0) -
-                  (data.leaveData?.pl?.taken || 0)}
+                  (data.leaveData?.pl?.taken || 0) +
+                  1}
               </td>
               <td
                 style={{
