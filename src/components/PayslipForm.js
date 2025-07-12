@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button, Row, Col, Container } from "react-bootstrap";
 import { Calendar } from "primereact/calendar";
-import "primereact/resources/themes/saga-blue/theme.css"; // or your preferred theme
+import { Dropdown } from "primereact/dropdown";
+import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
@@ -12,7 +13,7 @@ const PayslipForm = ({ onSubmit }) => {
     department: "",
     designation: "",
     gender: "",
-    doj: null, // Using Date object
+    doj: null,
     workingDays: "",
     lopDays: "",
     paidDays: "",
@@ -23,7 +24,7 @@ const PayslipForm = ({ onSubmit }) => {
     otherAllowance: "",
     deductions: "",
     pt: "",
-    paymentDate: null, // Using Date object
+    paymentDate: null,
     bankName: "",
     accountNo: "",
     panNo: "",
@@ -35,6 +36,29 @@ const PayslipForm = ({ onSubmit }) => {
       lwp: { taken: 0, penalty: 0 },
     },
   });
+
+  const [selectedPeriod, setSelectedPeriod] = useState({
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
+  });
+
+  const months = [
+    { label: "January", value: 0 },
+    { label: "February", value: 1 },
+    { label: "March", value: 2 },
+    { label: "April", value: 3 },
+    { label: "May", value: 4 },
+    { label: "June", value: 5 },
+    { label: "July", value: 6 },
+    { label: "August", value: 7 },
+    { label: "September", value: 8 },
+    { label: "October", value: 9 },
+    { label: "November", value: 10 },
+    { label: "December", value: 11 },
+  ];
+
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 10 }, (_, i) => currentYear - 5 + i);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +78,27 @@ const PayslipForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Function to format date without timezone issues
+    const formatDateWithoutTimezone = (date) => {
+      if (!date) return null;
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
     const formattedData = {
       ...formData,
-      doj: formData.doj ? formData.doj.toISOString().split("T")[0] : "",
+      doj: formData.doj ? formatDateWithoutTimezone(formData.doj) : "",
       paymentDate: formData.paymentDate
-        ? formData.paymentDate.toISOString().split("T")[0]
+        ? formatDateWithoutTimezone(formData.paymentDate)
         : "",
+      period: {
+        month: selectedPeriod.month,
+        year: selectedPeriod.year,
+        monthName:
+          months.find((m) => m.value === selectedPeriod.month)?.label || "",
+      },
     };
 
     onSubmit(formattedData);
@@ -75,6 +114,50 @@ const PayslipForm = ({ onSubmit }) => {
             </div>
             <div className="form-content">
               <Row className="mt-3">
+                <Col lg={3} md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Payslip Month</Form.Label>
+                    <Form.Select
+                      value={selectedPeriod.month}
+                      onChange={(e) =>
+                        setSelectedPeriod((prev) => ({
+                          ...prev,
+                          month: parseInt(e.target.value),
+                        }))
+                      }
+                      required
+                    >
+                      <option value="">Select Month</option>
+                      {months.map((month) => (
+                        <option key={month.value} value={month.value}>
+                          {month.label}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col lg={3} md={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Payslip Year</Form.Label>
+                    <Form.Select
+                      value={selectedPeriod.year}
+                      onChange={(e) =>
+                        setSelectedPeriod((prev) => ({
+                          ...prev,
+                          year: parseInt(e.target.value),
+                        }))
+                      }
+                      required
+                    >
+                      <option value="">Select Year</option>
+                      {years.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
                 <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Employee Code</Form.Label>
@@ -101,6 +184,9 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
+              </Row>
+
+              <Row>
                 <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Department</Form.Label>
@@ -123,39 +209,6 @@ const PayslipForm = ({ onSubmit }) => {
                       name="designation"
                       value={formData.designation}
                       onChange={handleChange}
-                      required
-                    />
-                  </Form.Group>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col lg={3} md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Gender</Form.Label>
-                    <Form.Select
-                      name="gender"
-                      placeholder="Select gender"
-                      value={formData.gender}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                      <option value="Other">Other</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col lg={3} md={6}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Date of Joining</Form.Label>
-                    <Calendar
-                      value={formData.doj}
-                      onChange={(e) => handleDateChange("doj", e.value)}
-                      dateFormat="yy-mm-dd"
-                      placeholder="Select joining date"
-                      className="w-100"
                       required
                     />
                   </Form.Group>
@@ -223,7 +276,7 @@ const PayslipForm = ({ onSubmit }) => {
                       value={formData.paymentDate}
                       onChange={(e) => handleDateChange("paymentDate", e.value)}
                       dateFormat="yy-mm-dd"
-                      placeholder="Select payement date"
+                      placeholder="Select payment date"
                       className="w-100"
                       required
                     />

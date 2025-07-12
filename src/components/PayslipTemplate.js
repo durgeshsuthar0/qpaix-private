@@ -23,6 +23,35 @@ const PayslipTemplate = ({ data }) => {
 
   const netPay = totalEarnings - parseFloat(data.deductions || 0);
 
+  // Get month name from the period data
+  const getMonthName = () => {
+    if (data.period?.monthName) {
+      return data.period.monthName;
+    }
+    if (data.period?.month !== undefined) {
+      const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      return months[data.period.month] || "";
+    }
+    return format(new Date(data.paymentDate), "MMMM");
+  };
+
+  const getYear = () => {
+    return data.period?.year || format(new Date(data.paymentDate), "yyyy");
+  };
+
   const numberToWords = (num) => {
     if (num === 0) return "Zero";
 
@@ -124,8 +153,7 @@ const PayslipTemplate = ({ data }) => {
         border: "1px solid #00263a",
         borderRadius: "4px",
         padding: "15px",
-        width: "210mm", // A4 width
-
+        width: "210mm",
         margin: "0 auto",
         fontFamily: "Arial, sans-serif",
         fontSize: "12px",
@@ -135,7 +163,7 @@ const PayslipTemplate = ({ data }) => {
         printColorAdjust: "exact",
       }}
     >
-      <img className="bg-img" src={logo}></img>
+      <img className="bg-img" src={logo} alt="Company Logo"></img>
       <div
         className="payslip-header"
         style={{
@@ -146,7 +174,12 @@ const PayslipTemplate = ({ data }) => {
         }}
       >
         <div className="logo">
-          <img className="mt-3 mb-2" src={logo} width={100}></img>
+          <img
+            className="mt-3 mb-2"
+            src={logo}
+            width={100}
+            alt="Company Logo"
+          ></img>
         </div>
         <h1
           style={{
@@ -194,8 +227,7 @@ const PayslipTemplate = ({ data }) => {
             margin: "0",
           }}
         >
-          Salary Payslip for the Month of{" "}
-          {format(new Date(data.paymentDate), "MMMM yyyy")}
+          Salary Payslip for the Month of {getMonthName()} {getYear()}
         </h2>
       </div>
 
