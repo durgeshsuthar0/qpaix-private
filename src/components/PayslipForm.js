@@ -215,6 +215,19 @@ const PayslipForm = ({ onSubmit }) => {
                 </Col>
                 <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
+                    <Form.Label>Date of Joining</Form.Label>
+                    <Calendar
+                      value={formData.doj}
+                      onChange={(e) => handleDateChange("doj", e.value)}
+                      dateFormat="yy-mm-dd"
+                      placeholder="Select joining date"
+                      className="w-100"
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col lg={3} md={6}>
+                  <Form.Group className="mb-3">
                     <Form.Label>Total Working Days</Form.Label>
                     <Form.Control
                       type="number"
@@ -226,7 +239,10 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
-                <Col lg={3} md={6}>
+              </Row>
+
+              <Row>
+              <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>LOP Days</Form.Label>
                     <Form.Control
@@ -239,10 +255,7 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
-              </Row>
-
-              <Row>
-                <Col md={4}>
+                <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Paid Days</Form.Label>
                     <Form.Control
@@ -255,7 +268,7 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
+                <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Leaves Taken</Form.Label>
                     <Form.Control
@@ -269,7 +282,7 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
-                <Col md={4}>
+                <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Payment Date</Form.Label>
                     <Calendar
