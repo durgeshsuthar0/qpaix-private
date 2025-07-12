@@ -228,6 +228,28 @@ const PayslipForm = ({ onSubmit }) => {
                 </Col>
                 <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
+                    <Form.Label>Gender</Form.Label>
+                    <Form.Select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                      <option value="Prefer not to say">
+                        Prefer not to say
+                      </option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={3} md={6}>
+                  <Form.Group className="mb-3">
                     <Form.Label>Total Working Days</Form.Label>
                     <Form.Control
                       type="number"
@@ -239,10 +261,7 @@ const PayslipForm = ({ onSubmit }) => {
                     />
                   </Form.Group>
                 </Col>
-              </Row>
-
-              <Row>
-              <Col lg={3} md={6}>
+                <Col lg={3} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>LOP Days</Form.Label>
                     <Form.Control
